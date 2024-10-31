@@ -16,3 +16,30 @@ setup_diretorios() {
 registrar_log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
 }
+
+# Array com categorias de produtos
+categorias=("Camisetas" "Calças" "Vestidos" "Acessórios")
+
+#Função para adicionar novo produto
+adicionar_produto() {
+    echo "Digite os dados do produto:"
+    read -p "Nome do produto: " nome
+    read -p "Preço: " preco
+    read -p "Quantidade: " quantidade
+
+
+	echo "Selecione a categoria:"
+	select categoria in "${categorias[@]}"; do
+	    if [[ -n $categoria ]]; then
+	        break
+	    else
+	        echo "Seleção inválida. Tente novamente."
+	    fi
+	done
+
+	echo "$nome|$preco|$quantidade|$categoria" >> "$LOJA_DIR/estoque/produtos.txt"
+    registrar_log "Produto adicionado: $nome"
+}
+
+
+ 
