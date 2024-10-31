@@ -48,3 +48,17 @@ verificar_estoque() {
     awk -F'|' '$3 < 5 {print "Produto: " $1 ", Quantidade: " $3}'
 }
  
+# Função para gerar relatório de vendas
+relatorio_vendas() {
+    if [ -f "$LOJA_DIR/vendas/vendas_$DATA.txt" ]; then
+        echo "=== Relatório de Vendas - $DATA ==="
+        total=$(awk -F'|' '{sum += $2} END {print sum}' "$LOJA_DIR/vendas/vendas_$DATA.txt")
+        echo "Total de vendas: R$ $total"
+        echo -e "\nVendas por categoria:"
+        awk -F'|' '{print $4}' "$LOJA_DIR/vendas/vendas_$DATA.txt" | 
+        sort | uniq -c | sort -nr
+    else
+        echo "Nenhuma venda registrada hoje."
+    fi
+}
+
