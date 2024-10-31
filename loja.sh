@@ -8,7 +8,7 @@ export LOG_FILE="$LOJA_DIR/logs/operacoes_$DATA.log"
 
 # Função para criar diretórios necessários e respectivas permissões
 setup_diretorios() {
-    mkdir -p "$LOJA_DIR"/{estoque,vendas,logs,backup}
+    sudo mkdir -p "$LOJA_DIR"/{estoque,vendas,logs,backup}
     chmod 755 "$LOJA_DIR"
 }
 
@@ -46,6 +46,14 @@ verificar_estoque() {
     echo "Produtos com estoque baixo (menos de 5 unidades):"
     cat "$LOJA_DIR/estoque/produtos.txt" | 
     awk -F'|' '$3 < 5 {print "Produto: " $1 ", Quantidade: " $3}'
+}
+
+# Função para fazer backup do estoque
+backup_estoque() {
+    local backup_file="$LOJA_DIR/backup/estoque_$DATA.bak"
+    cp "$LOJA_DIR/estoque/produtos.txt" "$backup_file"
+    gzip "$backup_file"
+    registrar_log "Backup realizado: $backup_file.gz"
 }
  
 # Função para gerar relatório de vendas
@@ -90,3 +98,8 @@ main() {
         esac
     done
 }
+
+# Executa o programa principal
+main
+
+
