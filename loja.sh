@@ -20,7 +20,7 @@ registrar_log() {
 # Array com categorias de produtos
 categorias=("Camisetas" "Calças" "Vestidos" "Acessórios")
 
-#Função para adicionar novo produto
+# Função para adicionar novo produto
 adicionar_produto() {
     echo "Digite os dados do produto:"
     read -p "Nome do produto: " nome
@@ -41,5 +41,10 @@ adicionar_produto() {
     registrar_log "Produto adicionado: $nome"
 }
 
-
+# Função para listar produtos com baixo estoque
+verificar_estoque() {
+    echo "Produtos com estoque baixo (menos de 5 unidades):"
+    cat "$LOJA_DIR/estoque/produtos.txt" | 
+    awk -F'|' '$3 < 5 {print "Produto: " $1 ", Quantidade: " $3}'
+}
  
