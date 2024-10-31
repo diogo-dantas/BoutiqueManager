@@ -171,19 +171,23 @@ main() {
     while true; do
         echo -e "\n=== $LOJA_NOME - Sistema de Gerenciamento ==="
         echo "1. Adicionar Produto"
-        echo "2. Verificar Estoque"
-        echo "3. Gerar Relatório de Vendas"
-        echo "4. Fazer Backup"
-        echo "5. Sair"
+        echo "2. Registrar Venda"
+        echo "3. Verificar Estoque"
+        echo "4. Gerar Relatório de Vendas"
+        echo "5. Fazer Backup"
+        echo "6. Listar Produtos"
+        echo "7. Sair"
         
         read -p "Escolha uma opção: " opcao
         
         case $opcao in
             1) adicionar_produto ;;
-            2) verificar_estoque ;;
-            3) relatorio_vendas ;;
-            4) backup_estoque ;;
-            5) break ;;
+            2) registrar_venda ;;
+            3) verificar_estoque ;;
+            4) relatorio_vendas ;;
+            5) backup_estoque ;;
+            6) listar_produtos ;;
+            7) break ;;
             *) echo "Opção inválida!" ;;
         esac
     done
