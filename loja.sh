@@ -62,3 +62,31 @@ relatorio_vendas() {
     fi
 }
 
+# Função principal
+main() {
+    # Verifica se os diretórios existem
+    if [ ! -d "$LOJA_DIR" ]; then
+        setup_diretorios
+    fi
+    
+    # Menu principal
+    while true; do
+        echo -e "\n=== $LOJA_NOME - Sistema de Gerenciamento ==="
+        echo "1. Adicionar Produto"
+        echo "2. Verificar Estoque"
+        echo "3. Gerar Relatório de Vendas"
+        echo "4. Fazer Backup"
+        echo "5. Sair"
+        
+        read -p "Escolha uma opção: " opcao
+        
+        case $opcao in
+            1) adicionar_produto ;;
+            2) verificar_estoque ;;
+            3) relatorio_vendas ;;
+            4) backup_estoque ;;
+            5) break ;;
+            *) echo "Opção inválida!" ;;
+        esac
+    done
+}
