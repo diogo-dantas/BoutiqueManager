@@ -41,6 +41,96 @@ adicionar_produto() {
     registrar_log "Produto adicionado: $nome"
 }
 
+# Função para listar produtos disponíveis
+listar_produtos() {
+    if [ -f "$LOJA_DIR/estoque/produtos.txt" ]; then
+        echo "=== Produtos Disponíveis ==="
+        echo "ID | Nome | Preço | Quantidade | Categoria"
+        echo "----------------------------------------"
+        awk -F'|' 'BEGIN {count=1} $3 > 0 {printf "%d | %s | R$ %s | %s | %s\n", count++, $1, $2, $3, $4}' "$LOJA_DIR/estoque/produtos.txt"
+    else
+        echo "Nenhum produto cadastrado."
+        return 1
+    fi
+}
+
+# Função para atualizar estoque
+atualizar_estoque() {
+    local produto_id=$1
+    local quantidade_vendida=$2
+    local temp_file="$LOJA_DIR/estoque/temp.txt"
+    local count=1
+    
+    while IFS='|' read -r nome preco quantidade categoria; do
+        if [ $count -eq $produto_id ]; then
+            nova_quantidade=$((quantidade - quantidade_vendida))
+            echo "$nome|$preco|$nova_quantidade|$categoria"
+        else
+            echo "$nome|$preco|$quantidade|$categoria"
+        fi
+        count=$((count + 1))
+    done < "$LOJA_DIR/estoque/produtos.txt" > "$temp_file"
+    
+    mv "$temp_file" "$LOJA_DIR/estoque/produtos.txt"
+}
+
+
+# Função para registrar venda
+registrar_venda() {
+    echo "=== Registrar Nova Venda ==="
+    
+    # Lista produtos disponíveis
+    if ! listar_produtos; then
+        return
+    fi
+    
+    # Seleciona produto
+    read -p "Digite o ID do produto: " produto_id
+    
+    # Verifica se o ID é válido
+    local total_produtos=$(wc -l < "$LOJA_DIR/estoque/produtos.txt")
+    if [ "$produto_id" -lt 1 ] || [ "$produto_id" -gt "$total_produtos" ]; then
+        echo "ID de produto inválido!"
+        return
+    fi
+    
+    # Obtém informações do produto
+    local linha=$(sed -n "${produto_id}p" "$LOJA_DIR/estoque/produtos.txt")
+    IFS='|' read -r nome preco quantidade categoria <<< "$linha"
+    
+    # Verifica quantidade disponível
+    echo "Produto: $nome"
+    echo "Preço: R$ $preco"
+    echo "Quantidade disponível: $quantidade"
+    
+    read -p "Quantidade a vender: " quantidade_venda
+    
+    # Valida quantidade
+    if [ "$quantidade_venda" -gt "$quantidade" ]; then
+        echo "Erro: Quantidade insuficiente em estoque!"
+        return
+    fi
+    
+    # Calcula total
+    total=$(echo "$preco * $quantidade_venda" | bc)
+    
+    echo "Total da venda: R$ $total"
+    read -p "Confirmar venda (S/N)? " confirma
+    
+    if [[ $confirma =~ ^[Ss]$ ]]; then
+        # Registra venda
+        echo "$nome|$total|$quantidade_venda|$categoria|$(date '+%Y-%m-%d %H:%M:%S')" >> "$LOJA_DIR/vendas/vendas_$DATA.txt"
+        
+        # Atualiza estoque
+        atualizar_estoque "$produto_id" "$quantidade_venda"
+        
+        registrar_log "Venda realizada: $quantidade_venda x $nome - Total: R$ $total"
+        echo "Venda registrada com sucesso!"
+    else
+        echo "Venda cancelada."
+    fi
+}
+
 # Função para listar produtos com baixo estoque
 verificar_estoque() {
     echo "Produtos com estoque baixo (menos de 5 unidades):"
