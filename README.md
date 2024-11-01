@@ -4,6 +4,10 @@
 
 ![Gerenciamento de loja de roupas](https://img.freepik.com/vetores-gratis/fundo-isometrico-de-loja-de-moda-sustentavel-com-jovem-casal-escolhendo-roupas-eticas-baratas-ilustracao-vetorial_1284-74876.jpg?t=st=1730421137~exp=1730424737~hmac=8bc2c6f04204380a47d8dffefd6768fb9a5815db0cebf1b1c4b12685083cb7c7&w=740)
 
+<a href="http://www.freepik.com">Designed by gstudioimagen / Freepik</a>
+
+
+
 ## 📋 Sobre o Projeto
 
 BoutiqueManager é um sistema em shell script projetado para automatizar e simplificar a gestão de pequenas lojas de roupas. O sistema oferece funcionalidades essenciais como gestão de estoque, registro de vendas, relatórios e backups automáticos.
@@ -106,3 +110,5 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 Diogo Dantas (www.linkedin.com/in/diogodantasp) - diogo.dantas@live.com
 
 Link do projeto: [https://github.com/diogo-dantas/boutique-manager](https://github.com/diogo-dantas/boutique-manager)
+
+Post sobre o repositório: https://diogo-dantas.github.io/pt-br/posts/development/shell-script/boutique-manager/
